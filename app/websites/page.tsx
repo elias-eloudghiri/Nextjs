@@ -1,6 +1,11 @@
 import Title from "@/composants/ui/Title";
 import WebsitesList from "./_components/WebsitesList";
 import { createClient } from "@/prismicio";
+import { getMetadata } from "@/libs/metadata";
+
+export async function generateStaticParams() {
+  return getMetadata("websites");
+}
 
 export default async function WebsitesPage() {
   const client = createClient();

@@ -6,6 +6,10 @@ import VideoSlide from "@/slices/VideoSlide";
 import { SliceZone } from "@prismicio/react";
 import { redirect } from "next/navigation";
 
+type WebsitePageType = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function generateStaticParams() {
   const client = createClient();
   const websites = await client.getAllByType("website");
@@ -15,9 +19,18 @@ export async function generateStaticParams() {
   }));
 }
 
-type WebsitePageType = {
-  params: Promise<{ slug: string }>;
-};
+export async function generateMetadata({ params }: WebsitePageType) {
+  const { slug } = await params;
+  const client = createClient();
+  const website = await client.getByUID("website", slug);
+  return {
+    title: website.data.meta_title,
+    description: website.data.meta_description,
+    openGraph: {
+      images: [website.data.meta_image],
+    },
+  };
+}
 
 export default async function WebsitePage({ params }: WebsitePageType) {
   const { slug } = await params;

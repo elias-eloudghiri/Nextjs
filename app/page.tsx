@@ -4,10 +4,18 @@ import Title from "@/composants/ui/Title";
 import Website from "@/composants/ui/Website";
 import WebsiteHeader from "@/composants/ui/WebsiteHeader";
 import { createClient } from "@/prismicio";
+import { getMetadata } from "@/libs/metadata";
+
+export async function generateStaticParams() {
+  return getMetadata("home");
+}
 
 export default async function HomePage() {
   const client = createClient();
   const websites = await client.getAllByType("website");
+
+  const page = await client.getSingle("home");
+  console.log("page: ", page);
 
   return (
     <main>
